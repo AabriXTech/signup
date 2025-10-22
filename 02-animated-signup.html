@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+    <!-- Responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Signup Page</title>
+    <style>
+        /* Reset all default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body with animated gradient */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Gradient animation */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main signup container */
+        .signup-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            animation: slideIn 0.8s ease;
+        }
+
+        /* Slide in animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header section */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Icon with pulse animation */
+        .header-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Main heading */
+        .header h1 {
+            color: #333;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Subtitle */
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Progress steps */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        /* Progress line */
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        /* Active progress line */
+        .progress-line {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 1;
+            transition: width 0.3s ease;
+        }
+
+        /* Individual step */
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+
+        /* Active step */
+        .step.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.2);
+        }
+
+        /* Completed step */
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Form section */
+        .form-section {
+            display: none;
+        }
+
+        /* Active form section */
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Form group */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Label */
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Input field */
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        /* Input focus */
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Valid input */
+        .form-group input.valid {
+            border-color: #28a745;
+        }
+
+        /* Invalid input */
+        .form-group input.invalid {
+            border-color: #dc3545;
+        }
+
+        /* Error message */
+        .error-text {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .error-text.show {
+            display: block;
+        }
+
+        /* Password strength */
+        .strength-meter {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: #dc3545;
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: #ffc107;
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: #28a745;
+        }
+
+        /* Strength text */
+        .strength-text {
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            color: #666;
+        }
+
+        /* Button container */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        /* Previous button */
+        .btn-prev {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-prev:hover {
+            background: #d0d0d0;
+        }
+
+        /* Next/Submit button */
+        .btn-next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Disabled button */
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Login link */
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: center;
+        }
+
+        .alert.show { display: block; }
+
+        .alert.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert.success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container -->
+    <div class="signup-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-icon">✨</div>
+            <h1>Create Account</h1>
+            <p>Join us in 3 easy steps</p>
+        </div>
+
+        <!-- Progress steps -->
+        <div class="steps">
+            <div class="progress-line" id="progressLine"></div>
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert" id="alert"></div>
+
+        <!-- Form -->
+        <form id="signupForm">
+            <!-- Step 1: Personal Info -->
+            <div class="form-section active" id="section1">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required>
+                    <div class="error-text" id="nameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                    <div class="error-text" id="emailError"></div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Password -->
+            <div class="form-section" id="section2">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                    <div class="strength-meter">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText"></div>
+                    <div class="error-text" id="passwordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required>
+                    <div class="error-text" id="confirmError"></div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-next" onclick="nextStep()">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirmation -->
+            <div class="form-section" id="section3">
+                <div class="form-group">
+                    <label for="phone">Phone Number (Optional)</label>
+                    <input type="tel" id="phone">
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="terms" required>
+                        <span>I agree to Terms & Conditions</span>
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">Back</button>
+                    <button type="submit" class="btn btn-next">Create Account</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Login link -->
+        <div class="login-link">
+            Already have an account? <a href="#">Login</a>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // VARIABLES
+        // ============================================
+        
+        // Current step (1, 2, or 3)
+        let currentStep = 1;
+        
+        // Form data object
+        const formData = {
+            fullName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phone: ''
+        };
+
+        // ============================================
+        // GET DOM ELEMENTS
+        // ============================================
+        
+        // Get form
+        const form = document.getElementById('signupForm');
+        
+        // Get inputs
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const phoneInput = document.getElementById('phone');
+        const termsCheckbox = document.getElementById('terms');
+        
+        // Get error elements
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmError = document.getElementById('confirmError');
+        
+        // Get strength elements
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        
+        // Get alert
+        const alert = document.getElementById('alert');
+        
+        // Get progress line
+        const progressLine = document.getElementById('progressLine');
+
+        // ============================================
+        // VALIDATION FUNCTIONS
+        // ============================================
+        
+        // Validate email
+        function validateEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+        
+        // Check password strength
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            if (strength <= 2) return 'weak';
+            if (strength <= 3) return 'medium';
+            return 'strong';
+        }
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        
+        // Show alert message
+        function showAlert(message, type) {
+            alert.textContent = message;
+            alert.classList.remove('error', 'success');
+            alert.classList.add(type, 'show');
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================
+        // NAVIGATION FUNCTIONS
+        // ============================================
+        
+        // Next step function
+        function nextStep() {
+            // Validate current step
+            if (currentStep === 1) {
+                const name = fullNameInput.value.trim();
+                const email = emailInput.value.trim();
+                
+                // Validate name
+                if (name.length < 2) {
+                    nameError.textContent = 'Name must be at least 2 characters';
+                    nameError.classList.add('show');
+                    fullNameInput.classList.add('invalid');
+                    return;
+                }
+                
+                // Validate email
+                if (!validateEmail(email)) {
+                    emailError.textContent = 'Invalid email format';
+                    emailError.classList.add('show');
+                    emailInput.classList.add('invalid');
+                    return;
+                }
+                
+                // Save data
+                formData.fullName = name;
+                formData.email = email;
+                
+            } else if (currentStep === 2) {
+                const password = passwordInput.value;
+                const confirm = confirmPasswordInput.value;
+                
+                // Validate password
+                if (password.length < 6) {
+                    passwordError.textContent = 'Password must be 6+ characters';
+                    passwordError.classList.add('show');
+                    return;
+                }
+                
+                // Check match
+                if (password !== confirm) {
+                    confirmError.textContent = 'Passwords do not match';
+                    confirmError.classList.add('show');
+                    return;
+                }
+                
+                // Save data
+                formData.password = password;
+                formData.confirmPassword = confirm;
+            }
+            
+            // Move to next step
+            if (currentStep < 3) {
+                currentStep++;
+                updateSteps();
+            }
+        }
+        
+        // Previous step function
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateSteps();
+            }
+        }
+        
+        // Update steps display
+        function updateSteps() {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current section
+            document.getElementById('section' + currentStep).classList.add('active');
+            
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById('step' + i);
+                step.classList.remove('active', 'completed');
+                
+                if (i < currentStep) {
+                    step.classList.add('completed');
+                    step.textContent = '✓';
+                } else if (i === currentStep) {
+                    step.classList.add('active');
+                    step.textContent = i;
+                } else {
+                    step.textContent = i;
+                }
+            }
+            
+            // Update progress line
+            const progress = ((currentStep - 1) / 2) * 100;
+            progressLine.style.width = progress + '%';
+        }
+
+        // ============================================
+        // REAL-TIME VALIDATION
+        // ============================================
+        
+        // Name validation
+        fullNameInput.addEventListener('input', () => {
+            if (fullNameInput.value.trim().length >= 2) {
+                fullNameInput.classList.remove('invalid');
+                fullNameInput.classList.add('valid');
+                nameError.classList.remove('show');
+            }
+        });
+        
+        // Email validation
+        emailInput.addEventListener('input', () => {
+            if (validateEmail(emailInput.value.trim())) {
+                emailInput.classList.remove('invalid');
+                emailInput.classList.add('valid');
+                emailError.classList.remove('show');
+            }
+        });
+        
+        // Password strength
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            
+            if (password.length === 0) {
+                strengthFill.className = 'strength-fill';
+                strengthText.textContent = '';
+                return;
+            }
+            
+            const strength = checkPasswordStrength(password);
+            strengthFill.className = 'strength-fill ' + strength;
+            
+            if (strength === 'weak') {
+                strengthText.textContent = 'Weak password';
+                strengthText.style.color = '#dc3545';
+            } else if (strength === 'medium') {
+                strengthText.textContent = 'Medium password';
+                strengthText.style.color = '#ffc107';
+            } else {
+                strengthText.textContent = 'Strong password';
+                strengthText.style.color = '#28a745';
+            }
+        });
+        
+        // Confirm password
+        confirmPasswordInput.addEventListener('input', () => {
+            if (confirmPasswordInput.value === passwordInput.value) {
+                confirmPasswordInput.classList.remove('invalid');
+                confirmPasswordInput.classList.add('valid');
+                confirmError.classList.remove('show');
+            }
+        });
+
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        
+        // Submit event
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Check terms
+            if (!termsCheckbox.checked) {
+                showAlert('Please accept terms & conditions', 'error');
+                return;
+            }
+            
+            // Save phone
+            formData.phone = phoneInput.value.trim();
+            
+            // Log data
+            console.log('Signup Data:', formData);
+            
+            // Show success
+            showAlert('Account created successfully!', 'success');
+            
+            // Simulate redirect
+            setTimeout(() => {
+                console.log('Redirecting to login...');
+            }, 2000);
+        });
+
+        // ============================================
+        // CONSOLE LOG
+        // ============================================
+        
+        console.log('Multi-Step Signup Loaded! 🚀');
+    </script>
+</body>
+</html>

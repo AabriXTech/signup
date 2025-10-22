@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8">
+    <!-- Responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Signup Page</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Include padding/border in size */
+        }
+
+        /* Body with gradient background */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Signup container */
+        .signup-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 0.5s ease; /* Fade in animation */
+        }
+
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95); /* Start slightly smaller */
+            }
+            to {
+                opacity: 1;
+                transform: scale(1); /* Normal size */
+            }
+        }
+
+        /* Header styling */
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Main heading */
+        .signup-header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        /* Subtitle */
+        .signup-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Form group container */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Label styling */
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Input field styling */
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Input focus effect */
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Input validation states */
+        .form-group input.valid {
+            border-color: #28a745; /* Green for valid */
+        }
+
+        .form-group input.invalid {
+            border-color: #dc3545; /* Red for invalid */
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        /* Password strength bar */
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+
+        /* Strength levels */
+        .strength-bar.weak {
+            width: 33%;
+            background: #dc3545; /* Red */
+        }
+
+        .strength-bar.medium {
+            width: 66%;
+            background: #ffc107; /* Yellow */
+        }
+
+        .strength-bar.strong {
+            width: 100%;
+            background: #28a745; /* Green */
+        }
+
+        /* Strength text */
+        .strength-text {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            color: #666;
+        }
+
+        /* Terms checkbox container */
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Checkbox styling */
+        .terms-container input[type="checkbox"] {
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        /* Terms text */
+        .terms-container label {
+            font-size: 0.9rem;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* Terms link */
+        .terms-container a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .terms-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Signup button */
+        .signup-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* Button hover effect */
+        .signup-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Disabled button */
+        .signup-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Login link */
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error message */
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Field error message */
+        .field-error {
+            color: #dc3545;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main signup container -->
+    <div class="signup-container">
+        <!-- Header -->
+        <div class="signup-header">
+            <h1>✨ Create Account</h1>
+            <p>Sign up to get started</p>
+        </div>
+
+        <!-- Error message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Success message -->
+        <div class="success-message" id="successMessage"></div>
+
+        <!-- Signup form -->
+        <form id="signupForm">
+            <!-- Full name input -->
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input 
+                    type="text" 
+                    id="fullName" 
+                    placeholder="Enter your full name"
+                    required
+                >
+                <div class="field-error" id="nameError"></div>
+            </div>
+
+            <!-- Email input -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    placeholder="Enter your email"
+                    required
+                >
+                <div class="field-error" id="emailError"></div>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    placeholder="Create a password"
+                    required
+                >
+                <!-- Password strength indicator -->
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+                <div class="field-error" id="passwordError"></div>
+            </div>
+
+            <!-- Confirm password input -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    placeholder="Confirm your password"
+                    required
+                >
+                <div class="field-error" id="confirmError"></div>
+            </div>
+
+            <!-- Terms and conditions -->
+            <div class="terms-container">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+
+            <!-- Signup button -->
+            <button type="submit" class="signup-btn" id="signupBtn">Create Account</button>
+        </form>
+
+        <!-- Login link -->
+        <div class="login-link">
+            Already have an account? <a href="#">Login</a>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GET DOM ELEMENTS
+        // ============================================
+        
+        // Get form element
+        const signupForm = document.getElementById('signupForm');
+        
+        // Get input fields
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const termsCheckbox = document.getElementById('terms');
+        
+        // Get error message elements
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmError = document.getElementById('confirmError');
+        
+        // Get password strength elements
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+        
+        // Get signup button
+        const signupBtn = document.getElementById('signupBtn');
+
+        // ============================================
+        // VALIDATION FUNCTIONS
+        // ============================================
+        
+        // Function to validate email format
+        function validateEmail(email) {
+            // Regular expression for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Function to validate name (at least 2 characters)
+        function validateName(name) {
+            return name.trim().length >= 2;
+        }
+
+        // Function to check password strength
+        function checkPasswordStrength(password) {
+            // Initialize strength score
+            let strength = 0;
+            
+            // Check password length
+            if (password.length >= 8) strength++;
+            
+            // Check for lowercase letters
+            if (/[a-z]/.test(password)) strength++;
+            
+            // Check for uppercase letters
+            if (/[A-Z]/.test(password)) strength++;
+            
+            // Check for numbers
+            if (/[0-9]/.test(password)) strength++;
+            
+            // Check for special characters
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            
+            // Return strength level
+            if (strength <= 2) return 'weak';
+            if (strength <= 3) return 'medium';
+            return 'strong';
+        }
+
+        // ============================================
+        // REAL-TIME VALIDATION
+        // ============================================
+        
+        // Validate full name on input
+        fullNameInput.addEventListener('input', () => {
+            const name = fullNameInput.value;
+            
+            // If name is valid
+            if (validateName(name)) {
+                fullNameInput.classList.remove('invalid');
+                fullNameInput.classList.add('valid');
+                nameError.classList.remove('show');
+            } else {
+                fullNameInput.classList.remove('valid');
+                fullNameInput.classList.add('invalid');
+                nameError.textContent = 'Name must be at least 2 characters';
+                nameError.classList.add('show');
+            }
+        });
+
+        // Validate email on input
+        emailInput.addEventListener('input', () => {
+            const email = emailInput.value;
+            
+            // If email is valid
+            if (validateEmail(email)) {
+                emailInput.classList.remove('invalid');
+                emailInput.classList.add('valid');
+                emailError.classList.remove('show');
+            } else {
+                emailInput.classList.remove('valid');
+                emailInput.classList.add('invalid');
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.classList.add('show');
+            }
+        });
+
+        // Check password strength on input
+        passwordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            
+            // If password is empty, reset strength indicator
+            if (password.length === 0) {
+                strengthBar.className = 'strength-bar';
+                strengthText.textContent = '';
+                return;
+            }
+            
+            // Get password strength
+            const strength = checkPasswordStrength(password);
+            
+            // Update strength bar
+            strengthBar.className = 'strength-bar ' + strength;
+            
+            // Update strength text
+            if (strength === 'weak') {
+                strengthText.textContent = 'Weak password';
+                strengthText.style.color = '#dc3545';
+            } else if (strength === 'medium') {
+                strengthText.textContent = 'Medium password';
+                strengthText.style.color = '#ffc107';
+            } else {
+                strengthText.textContent = 'Strong password';
+                strengthText.style.color = '#28a745';
+            }
+            
+            // Validate password length
+            if (password.length < 6) {
+                passwordInput.classList.add('invalid');
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.classList.add('show');
+            } else {
+                passwordInput.classList.remove('invalid');
+                passwordError.classList.remove('show');
+            }
+        });
+
+        // Validate confirm password on input
+        confirmPasswordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            // Check if passwords match
+            if (confirmPassword === password && confirmPassword.length > 0) {
+                confirmPasswordInput.classList.remove('invalid');
+                confirmPasswordInput.classList.add('valid');
+                confirmError.classList.remove('show');
+            } else {
+                confirmPasswordInput.classList.remove('valid');
+                confirmPasswordInput.classList.add('invalid');
+                confirmError.textContent = 'Passwords do not match';
+                confirmError.classList.add('show');
+            }
+        });
+
+        // ============================================
+        // FORM SUBMISSION
+        // ============================================
+        
+        // Add submit event listener
+        signupForm.addEventListener('submit', (e) => {
+            // Prevent default form submission
+            e.preventDefault();
+            
+            // Get all input values
+            const fullName = fullNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const termsAccepted = termsCheckbox.checked;
+            
+            // Validate all fields
+            let isValid = true;
+            
+            // Validate name
+            if (!validateName(fullName)) {
+                showError('Please enter a valid name');
+                isValid = false;
+            }
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                showError('Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Validate password
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                isValid = false;
+            }
+            
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                isValid = false;
+            }
+            
+            // Check if terms are accepted
+            if (!termsAccepted) {
+                showError('Please accept the terms and conditions');
+                isValid = false;
+            }
+            
+            // If all validations pass
+            if (isValid) {
+                // Log form data (in real app, send to server)
+                console.log('Signup data:');
+                console.log('Name:', fullName);
+                console.log('Email:', email);
+                console.log('Password:', password);
+                console.log('Terms accepted:', termsAccepted);
+                
+                // Show success message
+                showSuccess('Account created successfully! Redirecting...');
+                
+                // Disable form
+                signupBtn.disabled = true;
+                
+                // Simulate redirect after 2 seconds
+                setTimeout(() => {
+                    console.log('Redirecting to login...');
+                    // In real app: window.location.href = '/login';
+                }, 2000);
+            }
+        });
+
+        // ============================================
+        // MESSAGE FUNCTIONS
+        // ============================================
+        
+        // Function to show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to show success message
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+        }
+
+        // ============================================
+        // CONSOLE LOG
+        // ============================================
+        
+        // Log when page loads
+        console.log('Signup page loaded! ✨');
+    </script>
+</body>
+</html>
